@@ -1,0 +1,26 @@
+From 24d4036036884b350bd6c519b64626faa2c7e660 Mon Sep 17 00:00:00 2001
+From: Ankur Verma <ankurv@localhost.localdomain>
+Date: Thu, 20 Aug 2020 23:16:12 -0700
+Subject: [PATCH] Symbol clashes
+
+---
+ src/osgPlugins/zip/unzip.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git "a/src/osgPlugins/zip/unzip.cpp" "b/src/osgPlugins/zip/unzip.cpp"
+index dd4b48b80..282269770 100644
+--- "a/src/osgPlugins/zip/unzip.cpp"
++++ "b/src/osgPlugins/zip/unzip.cpp"
+@@ -213,7 +213,7 @@ DWORD GetFilePosU(HANDLE hfout)
+   return ftell(hfout);
+ }
+ 
+-bool FileExists(const TCHAR *fn)
++static bool FileExists(const TCHAR *fn)
+ { struct stat st;
+   int res=stat(fn,&st);
+   return (res==0);
+
+-- 
+2.26.2
+

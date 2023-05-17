@@ -1,0 +1,6 @@
+most patches are simply mods to make the current vcpkg patches apply to my osg tree,
+
+in openexr4.patch the definition of OPENEXR_DLL is removed from src/osgPlugins/exr/ReaderWriterEXR.cpp
+(to allow static lib)
+in the portfile.cmake I add C(XX)_flags /source-charset:.1252 and vcpkg_cmake_configure gets NO_CHARSET_FLAG
+(fix the warnings about a degrees symbol in comment)
