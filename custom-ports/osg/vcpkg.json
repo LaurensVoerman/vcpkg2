@@ -54,6 +54,14 @@
           "name": "osg",
           "default-features": false,
           "features": [
+            "vnc"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
             "rest-http-device"
           ],
           "platform": "!windows"
@@ -128,6 +136,12 @@
       "description": "Build the exr plugin",
       "dependencies": [
         "openexr"
+      ]
+    },
+    "vnc": {
+      "description": "Build the vnc plugin",
+      "dependencies": [
+        "vnc"
       ]
     },
     "packages": {

@@ -1,0 +1,24 @@
+{
+  "name": "vnc",
+  "version": "0.9.14",
+  "port-version": 1,
+  "description": "C libraries to easily implement VNC server or client",
+  "homepage": "https://libvnc.github.io/",
+  "license": "GPL-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib",
+    "lzo",
+    "libjpeg-turbo",
+    "libpng",
+    "pthreads",
+    "openssl"
+  ]
+}

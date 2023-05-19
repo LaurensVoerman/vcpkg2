@@ -1,0 +1,54 @@
+set(LIBVNCSERVER_FULL_VERSION 0.9.14)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO LibVNC/libvncserver
+    REF "LibVNCServer-${LIBVNCSERVER_FULL_VERSION}"
+    SHA512 8a0a58e355154cbe1e5807864dc874b063c5e5f5e20d64ae541d49d51b654a35ca9c625adc5c303b6570fa79c19f82d87a37612f9801b453ccf862bd77c06fcc
+    HEAD_REF master
+)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VNC_DYNAMIC)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_SHARED_LIBS=${VNC_DYNAMIC}
+        -DWITH_SDL=OFF
+        -DWITH_GTK=OFF
+        -DWITH_LIBSSH2=OFF
+        -DWITH_GNUTLS=OFF
+        -DWITH_SYSTEMD=OFF
+        -DWITH_GCRYPT=OFF
+        -DWITH_FFMPEG=OFF
+        -DWITH_SASL=OFF
+        -DWITH_EXAMPLES=OFF
+        -DWITH_TESTS=OFF
+	MAYBE_UNUSED_VARIABLES
+		WITH_SYSTEMD
+)
+##Option off by default
+#PREFER_WIN32THREADS
+
+##options ON (default)
+#LIBVNCSERVER_INSTALL
+#WITH_ZLIB
+#WITH_LZO
+#WITH_JPEG
+#WITH_PNG
+#WITH_THREADS
+#WITH_OPENSSL
+#WITH_TIGHTVNC_FILETRANSFER
+#WITH_24BPP
+#WITH_IPv6
+#WITH_WEBSOCKETS
+
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LibVNCServer)
+
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/README.md"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright
+)
