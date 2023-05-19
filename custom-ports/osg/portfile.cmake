@@ -66,7 +66,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openexr     BUILD_OSG_PLUGIN_EXR
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         vnc         BUILD_OSG_PLUGIN_VNC
-        vnc         CMAKE_REQUIRE_FIND_PACKAGE_VNC
+        vnc         CMAKE_REQUIRE_FIND_PACKAGE_LibVNCServer
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
         sdl1        BUILD_OSG_PLUGIN_SDL
     INVERTED_FEATURES
