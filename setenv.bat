@@ -1,5 +1,6 @@
 pushd "%~dp0"
 set PKG2=%CD%
+if not exist ..\vcpkg_data mkdir ..\vcpkg_data
 pushd ..\vcpkg_data
 set PKG_INTEMED=%CD%
 popd
