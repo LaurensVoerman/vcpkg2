@@ -141,7 +141,7 @@
     "vnc": {
       "description": "Build the vnc plugin",
       "dependencies": [
-        "vnc"
+        "libvncserver"
       ]
     },
     "packages": {

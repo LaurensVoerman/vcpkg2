@@ -1,5 +1,5 @@
 {
-  "name": "vnc",
+  "name": "libvncserver",
   "version": "0.9.14",
   "port-version": 1,
   "description": "C libraries to easily implement VNC server or client",
