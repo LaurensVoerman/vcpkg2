@@ -14,12 +14,25 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },	
     "zlib",
-    "libjpeg-turbo",
     "libpng",
+    "bzip2",
+	"freetype",
     {
         "name": "tiff",
         "default-features": false
+    },
+	"libwebp",
+	"openjpeg",
+	"opengl-registry",
+	"libepoxy",
+    {
+      "name": "pkgconf",
+      "host": true
     }
   ]
 }

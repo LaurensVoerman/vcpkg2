@@ -23,7 +23,24 @@ vcpkg_from_github(
 	REF b503d912aeb181e2d456eb09cc47e7af9665f722
 	SHA512 80c182aac73c623989125b702c8299b627e47442ddd65eac887a70f7089780ea5eda68f1847b012788c6a3ef6480da9b5a45ab8d89c9fc8289b77ef1eec09531
 	HEAD_REF release/1.6
-
+    PATCHES
+        libopenjp2.patch
 )
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
+# Debug build
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+	set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
+endif()
+
+# Release build
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+	set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+endif()
+vcpkg_cmake_configure(
+	SOURCE_PATH "${SOURCE_PATH}"
+	OPTIONS
+		-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
+)
+
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()

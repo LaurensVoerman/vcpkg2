@@ -1,0 +1,43 @@
+diff --git "a/D:\\git\\vcpkg\\buildtrees\\fox-toolkit\\src\\af9665f722-d47126708d\\lib\\CMakeLists_clean.txt" "b/D:\\git\\vcpkg\\buildtrees\\fox-toolkit\\src\\af9665f722-d47126708d\\lib\\CMakeLists.txt"
+index bf14214b0..96d4f380a 100644
+--- "a/D:\\git\\vcpkg\\buildtrees\\fox-toolkit\\src\\af9665f722-d47126708d\\lib\\CMakeLists_clean.txt"
++++ "b/D:\\git\\vcpkg\\buildtrees\\fox-toolkit\\src\\af9665f722-d47126708d\\lib\\CMakeLists.txt"
+@@ -1022,6 +1022,9 @@ endif()
+ 
+ if(WITH_OPENJPEG)
+   pkg_check_modules(OPENJPEG libopenjpeg1)
++  if(NOT OPENJPEG_FOUND)
++    pkg_check_modules(OPENJPEG libopenjp2)
++  endif()
+   if(OPENJPEG_FOUND)
+     list(APPEND LIBRARIES ${OPENJPEG_LIBRARIES})
+     add_definitions(-DHAVE_JP2_H)
+@@ -1074,6 +1077,26 @@ set_target_properties(fox PROPERTIES OUTPUT_NAME fox-${fox-toolkit_VERSION_MAJOR
+ #        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ #        )
+ # install(FILES ${HEADERS} DESTINATION include/cfox-${cfox_VERSION_MAJOR}.${cfox_VERSION_MINOR})
+-
+-
++message("xwin32 install fox")
++    set_property(TARGET fox PROPERTY PUBLIC_HEADER ${HEADERS})
++    if(WIN32)
++		message("win32 install fox")
++        INSTALL(TARGETS fox
++            EXPORT foxTargets
++            RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            LIBRARY DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fox-toolkit
++            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++            )
++    else()
++        INSTALL(TARGETS fox
++            EXPORT foxTargets
++            RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fox-toolkit
++            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++            )
++    endif()
+ 
