@@ -1,4 +1,8 @@
 set(FOXTOOLKIT_FULL_VERSION 1.6.57)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message("FOX forced to static library linkage")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
 # direct download from fox-toolkit has no CMakeLists
 #vcpkg_download_distfile(
 #    archive # "archive" is set to the path to the downloaded file
@@ -47,4 +51,4 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-configure_file("${CURRENT_BUILDTREES_DIR}/C:/dev/vcpkg/vcpkg/buildtrees/fox-toolkit//LICENSE" "${CURRENT_PACKAGES_DIR}/share/fox-toolkit/copyright" COPYONLY)
+configure_file("${CURRENT_BUILDTREES_DIR}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/fox-toolkit/copyright" COPYONLY)
