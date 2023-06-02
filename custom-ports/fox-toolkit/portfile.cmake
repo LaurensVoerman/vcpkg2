@@ -50,5 +50,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-configure_file("${CURRENT_BUILDTREES_DIR}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/fox-toolkit/copyright" COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/fox-toolkit/copyright" COPYONLY)
