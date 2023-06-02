@@ -24,7 +24,7 @@ vcpkg_from_github(
 	SHA512 80c182aac73c623989125b702c8299b627e47442ddd65eac887a70f7089780ea5eda68f1847b012788c6a3ef6480da9b5a45ab8d89c9fc8289b77ef1eec09531
 	HEAD_REF release/1.6
     PATCHES
-        libopenjp2.patch
+        lib_cmake.patch
 )
 
 # Debug build
@@ -36,11 +36,15 @@ endif()
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 	set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" FOX_DYNAMIC)
 vcpkg_cmake_configure(
 	SOURCE_PATH "${SOURCE_PATH}"
 	OPTIONS
 		-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
+        -DBUILD_SHARED_LIBS=${FOX_DYNAMIC}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+configure_file("${CURRENT_BUILDTREES_DIR}/C:/dev/vcpkg/vcpkg/buildtrees/fox-toolkit//LICENSE" "${CURRENT_PACKAGES_DIR}/share/fox-toolkit/copyright" COPYONLY)

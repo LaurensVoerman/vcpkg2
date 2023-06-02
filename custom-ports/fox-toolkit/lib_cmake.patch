@@ -1,0 +1,124 @@
+diff --git "a/lib/CMakeLists.txt" "b/lib/CMakeLists.txt"
+index bf14214..d512cf0 100644
+--- "a/lib/CMakeLists.txt"
++++ "b/lib/CMakeLists.txt"
+@@ -681,6 +681,12 @@ winrestore.gif)
+ 
+ add_library(fox ${SOURCES})
+ 
++#for dll build
++if(BUILD_SHARED_LIBS)
++  target_compile_definitions(fox PUBLIC FOXDLL)
++  target_compile_definitions(fox PRIVATE FOXDLL_EXPORTS)
++endif()
++
+ find_package(PkgConfig)
+ find_package(Threads)
+ find_package(X11)
+@@ -689,6 +695,8 @@ pkg_check_modules(FONTCONFIG fontconfig)
+ 
+ if(WITH_OPENGL)
+   find_package(OpenGL)
++  target_compile_definitions(fox PUBLIC -DHAVE_GL_H)
++  list(APPEND LIBRARIES ${OPENGL_gl_LIBRARY})
+ endif()
+ 
+ check_cxx_source_compiles( "#include <immintrin.h>
+@@ -697,6 +705,10 @@ if(HAVE_IMMINTRIN_H)
+   add_definitions(-DHAVE_IMMINTRIN_H)
+ endif()
+ 
++check_symbol_exists("vsscanf" "stdio.h" HAVE_VSSCANF)
++if(HAVE_VSSCANF)
++  add_definitions(-DHAVE_VSSCANF)
++endif()
+ 
+ check_cxx_symbol_exists(localtime_r "time.h" HAVE_LOCALTIME_R)
+ if(HAVE_LOCALTIME_R)
+@@ -863,7 +875,7 @@ else()
+     add_definitions(-DHAVE_SYS_NDIR_H)
+   else()
+     check_cxx_source_compiles("#include <sys/dir.h>\nint main(int argc,char *argv[]) { DIR * d; return 0; }" HAVE_SYS_DIR_H)
+-    if(NOT HAVE_SYS_DIR_H)
++    if(HAVE_SYS_DIR_H)
+       add_definitions(-DHAVE_SYS_DIR_H)
+     else()
+       check_cxx_source_compiles("#include <ndir.h>\nint main(int argc,char *argv[]) { DIR * d; return 0; }" HAVE_NDIR_H)
+@@ -1015,22 +1027,25 @@ endif()
+ if(WITH_WEBP)
+   pkg_check_modules(WEBP libwebp)
+   if(WEBP_FOUND)
+-    list(APPEND LIBRARIES ${WEBP_LIBRARIES})
++    list(APPEND LIBRARIES ${WEBP_LINK_LIBRARIES})
+     add_definitions(-DHAVE_WEBP_H)
+   endif()
+ endif()
+ 
+ if(WITH_OPENJPEG)
+   pkg_check_modules(OPENJPEG libopenjpeg1)
++  if(NOT OPENJPEG_FOUND)
++    pkg_check_modules(OPENJPEG libopenjp2)
++  endif()  
+   if(OPENJPEG_FOUND)
+-    list(APPEND LIBRARIES ${OPENJPEG_LIBRARIES})
++    list(APPEND LIBRARIES ${OPENJPEG_LINK_LIBRARIES})
+     add_definitions(-DHAVE_JP2_H)
+     include_directories(${OPENJPEG_INCLUDE_DIRS})
+ 
+   else()
+     pkg_check_modules(OPENJPEG libopenjpeg)
+     if(OPENJPEG_FOUND)
+-      list(APPEND LIBRARIES ${OPENJPEG_LIBRARIES})
++      list(APPEND LIBRARIES ${OPENJPEG_LINK_LIBRARIES})
+       add_definitions(-DHAVE_JP2_H)
+       include_directories(${OPENJPEG_INCLUDE_DIRS})
+     endif()
+@@ -1039,8 +1054,7 @@ endif()
+ 
+ if(WITH_OPENGL)
+   pkg_check_modules(EPOXY REQUIRED epoxy)
+-  target_compile_definitions(fox PUBLIC -DHAVE_GL_H)
+-  list(APPEND LIBRARIES ${EPOXY_LIBRARIES})
++  list(APPEND LIBRARIES ${EPOXY_LINK_LIBRARIES})
+   add_definitions(-DHAVE_EPOXY)
+ endif()
+ 
+@@ -1053,6 +1067,10 @@ if(NOT WITH_XIM)
+   add_definitions(-DNO_XIM)
+ endif()
+ 
++if(WIN32)
++  list(APPEND LIBRARIES ws2_32)
++endif()
++
+ target_include_directories(fox PUBLIC ${PROJECT_SOURCE_DIR}/include)
+ target_link_libraries(fox PRIVATE ${X11_LIBRARIES} ${LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+ 
+@@ -1075,5 +1093,24 @@ set_target_properties(fox PROPERTIES OUTPUT_NAME fox-${fox-toolkit_VERSION_MAJOR
+ #        )
+ # install(FILES ${HEADERS} DESTINATION include/cfox-${cfox_VERSION_MAJOR}.${cfox_VERSION_MINOR})
+ 
+-
+-
++set_property(TARGET fox PROPERTY PUBLIC_HEADER ${HEADERS})
++set(CMAKE_INSTALL_INCLUDEDIR "include")
++if(WIN32)
++    INSTALL(TARGETS fox
++        EXPORT foxTargets
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        LIBRARY DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fox-toolkit
++        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++        )
++else()
++    INSTALL(TARGETS fox
++        EXPORT foxTargets
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fox-toolkit
++        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++        )
++endif()
+\ No newline at end of file

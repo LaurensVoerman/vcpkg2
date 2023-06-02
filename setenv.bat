@@ -18,3 +18,6 @@ rem use my custom ports
 set VCPKG_OVERLAY_PORTS=%PKG2%\custom-ports
 set VCPKG_OVERLAY_TRIPLETS=%PKG2%\custom-triplets
 popd
+rem now try something like
+echo vcpkg install fox-toolkit --editable
+echo vcpkg install osg[tools] --editable
