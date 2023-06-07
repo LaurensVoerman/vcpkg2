@@ -1,32 +1,32 @@
-vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO RuGCiTViz/osgrc
-	REF 098e296bcd103cee27b9aac042878bc542a26e1a
-	SHA512 0
-	HEAD_REF main
-    PATCHES
-        fixup.patch
+set(LIBVNCSERVER_FULL_VERSION 0.9.14)
+
+vcpkg_from_git(
+    OUT_SOURCE_PATH SOURCE_PATH
+    URL E:\\osg\\36\\laurens\\osgRC
+    REF 098e296bcd103cee27b9aac042878bc542a26e1a
+    HEAD_REF main
 )
 
-# Debug build
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-	set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
-endif()
+file(WRITE "${SOURCE_PATH}\\src\\icons\\revision.bat" "EXIT 0")
+file(WRITE "${SOURCE_PATH}\\src\\revision.h" "#define OSG_RC_REVISION \"3176\"\n#define OSG_RC_REVISION_UNQUOTE 3176\n#define OSG_RC_REVISION_UNQUOTE_SVN_VERSION 3176\n#define OSG_RC_REVISION_MOD 0\n")
 
-# Release build
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-	set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
-endif()
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" FOX_DYNAMIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VNC_DYNAMIC)
 vcpkg_cmake_configure(
-	SOURCE_PATH "${SOURCE_PATH}"
-	OPTIONS
-		-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
-        -DBUILD_SHARED_LIBS=${FOX_DYNAMIC}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DWITH_FFMPEG=OFF
+	MAYBE_UNUSED_VARIABLES
+		WITH_SYSTEMD
 )
+
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/osgrc)
+
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/fox-toolkit/copyright" COPYONLY)
+
+file(INSTALL "${SOURCE_PATH}/README.md"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright
+)

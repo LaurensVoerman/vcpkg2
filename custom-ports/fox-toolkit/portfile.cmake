@@ -1,8 +1,10 @@
 set(FOXTOOLKIT_FULL_VERSION 1.6.57)
+#LINK ERRORS For static lib if jpeg/tiff etc are ON
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message("FOX forced to static library linkage")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
+
 # direct download from fox-toolkit has no CMakeLists
 #vcpkg_download_distfile(
 #    archive # "archive" is set to the path to the downloaded file
@@ -46,6 +48,15 @@ vcpkg_cmake_configure(
 	OPTIONS
 		-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
         -DBUILD_SHARED_LIBS=${FOX_DYNAMIC}
+-DWITH_XIM=OFF
+-DWITH_JPEG=OFF
+-DWITH_PNG=OFF
+-DWITH_TIFF=OFF
+-DWITH_ZLIB=ON
+-DWITH_BZ2LIB=OFF
+-DWITH_WEBP=OFF
+-DWITH_OPENJPEG=OFF
+-DWITH_OPENGL=ON
 )
 
 vcpkg_cmake_install()

@@ -1,8 +1,8 @@
 {
   "name": "osgrc",
-  "version": "1.6.57",
+  "version": "3176",
   "port-version": 1,
-  "description": "osg based 3D viewer",
+  "description": "CiT 3D viewer",
   "homepage": "https://www.rug.nl/society-business/centre-for-information-technology/research/hpcv/",
   "dependencies": [
     {
@@ -13,25 +13,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "vcpkg-pkgconfig-get-modules",
-      "host": true
-    },	
-    "zlib",
-    "libpng",
-    "bzip2",
-	"freetype",
-    {
-        "name": "tiff",
-        "default-features": false
-    },
-	"libwebp",
-	"openjpeg",
-	"opengl-registry",
-	"libepoxy",
-    {
-      "name": "pkgconf",
-      "host": true
-    }
+    "osg",
+    "fox-toolkit"
   ]
 }
