@@ -68,7 +68,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         vnc         BUILD_OSG_PLUGIN_VNC
         vnc         CMAKE_REQUIRE_FIND_PACKAGE_LibVNCServer
         lua         BUILD_OSG_PLUGIN_LUA
-        lua         CMAKE_REQUIRE_FIND_PACKAGE_LUA
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
         sdl1        BUILD_OSG_PLUGIN_SDL
     INVERTED_FEATURES

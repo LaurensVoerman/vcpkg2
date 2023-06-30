@@ -41,8 +41,23 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 #move exe files to "tools"
-set(tools viewer gui osgconvEx mkthumb)
-vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
+#not usefull without plugin dependencies
+#set(tools viewer gui osgconvEx mkthumb)
+#vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
+
+  file(GLOB osgrc_exe "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+  file(INSTALL ${osgrc_exe} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+  file(REMOVE ${osgrc_exe})
+  #file(WRITE "${CURRENT_PACKAGES_DIR}/tools/notes.txt" "VCPKG_BUILD_TYPE: ${VCPKG_BUILD_TYPE}\nosgrc_exe: ${osgrc_exe}\n")
+
+#if(NOT VCPKG_BUILD_TYPE)
+#not for release only build
+  file(GLOB osgrcd_exe "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
+  #message("osgrcd_exe: ${osgrcd_exe}")
+  file(INSTALL ${osgrcd_exe} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/")
+  file(REMOVE ${osgrcd_exe})
+  #file(WRITE "${CURRENT_PACKAGES_DIR}/tools/notesD.txt" "VCPKG_BUILD_TYPE: ${VCPKG_BUILD_TYPE}\nosgrcd_exe: ${osgrcd_exe}\n")
+#endif()
 
 #move plugins
 
