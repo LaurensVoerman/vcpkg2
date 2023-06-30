@@ -62,6 +62,14 @@
           "name": "osg",
           "default-features": false,
           "features": [
+            "lua"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
             "rest-http-device"
           ],
           "platform": "!windows"
@@ -143,6 +151,9 @@
       "dependencies": [
         "libvncserver"
       ]
+    },
+    "lua": {
+      "description": "Build the lua plugin"
     },
     "packages": {
       "description": "Set to ON to generate CPack configuration files and packaging targets"
