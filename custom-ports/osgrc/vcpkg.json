@@ -13,7 +13,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "osg",
+    {
+          "name": "osg",
+          "default-features": false,
+          "features": [
+            "fbx",
+            "tools"
+          ]
+    },
     "fox-toolkit"
   ]
 }

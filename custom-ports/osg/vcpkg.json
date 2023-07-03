@@ -155,6 +155,9 @@
     "lua": {
       "description": "Build the lua plugin"
     },
+    "fbx": {
+      "description": "Build the fbx plugin - needst FBK-SDK"
+    },
     "packages": {
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },

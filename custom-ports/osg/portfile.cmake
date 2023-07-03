@@ -67,6 +67,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         vnc         BUILD_OSG_PLUGIN_VNC
         vnc         CMAKE_REQUIRE_FIND_PACKAGE_LibVNCServer
+        fbx         BUILD_OSG_PLUGIN_FBX
+        fbx         CMAKE_REQUIRE_FIND_PACKAGE_FBX
         lua         BUILD_OSG_PLUGIN_LUA
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
         sdl1        BUILD_OSG_PLUGIN_SDL
@@ -109,7 +111,6 @@ vcpkg_cmake_configure(
         -DBUILD_OSG_PLUGIN_DICOM=OFF
         -DBUILD_OSG_PLUGIN_OPENCASCADE=OFF
         -DBUILD_OSG_PLUGIN_INVENTOR=OFF
-        -DBUILD_OSG_PLUGIN_FBX=OFF
         -DBUILD_OSG_PLUGIN_DIRECTSHOW=OFF
         -DBUILD_OSG_PLUGIN_LAS=OFF
         -DBUILD_OSG_PLUGIN_QTKIT=OFF
