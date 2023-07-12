@@ -1,0 +1,16 @@
+diff --git "a/src/osgPlugins/dicom/CMakeLists.txt" "b/src/osgPlugins/dicom/CMakeLists.txt"
+index ad1428f69..e5e53c13a 100644
+--- "a/src/osgPlugins/dicom/CMakeLists.txt"
++++ "b/src/osgPlugins/dicom/CMakeLists.txt"
+@@ -5,8 +5,10 @@ IF  (DCMTK_FOUND)
+ 
+     SET(TARGET_SRC ReaderWriterDICOM.cpp )
+ 
+-    LINK_LIBRARIES(${DCMTK_LIBRARIES})
++    LINK_LIBRARIES(DCMTK::DCMTK)
+ 
++    add_compile_options("${DCMTK_CMAKE_CXX_FLAGS}")
++    set(CMAKE_CXX_STANDARD 17)
+     ADD_DEFINITIONS(-DUSE_DCMTK)
+ 
+     IF (WIN32)
