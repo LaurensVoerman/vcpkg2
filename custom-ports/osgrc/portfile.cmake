@@ -1,19 +1,47 @@
-set(OSGRC_VER 3185)
+set(OSGRC_VER 3186)
 set(OSG_VER 3.6.5)
 
 #target for osgPlugins
 set(osg_plugins_subdir "osgPlugins-${OSG_VER}")
 message("${osg_plugins_subdir}")
 
-vcpkg_from_git(
-    OUT_SOURCE_PATH SOURCE_PATH
-    URL E:\\osg\\36\\laurens\\osgRC
-    REF 879005dc609c6cf8faa43529a3613b5a5003c2d4
-    HEAD_REF main
+#Find file in current dir
+find_file(archive osgrc_${OSGRC_VER}.7z PATHS ${CMAKE_CURRENT_LIST_DIR})
+
+#https://drive.google.com/file/d/1FAP4BpKULoBiqgOHTZ68qJzJZrb10AUY/view?usp=sharing
+#cannot find a direct download link for drive,
+#using unishare...
+if(NOT archive)
+vcpkg_download_distfile(
+    archive # "archive" is set to the path to the downloaded file
+    URLS "https://unishare.nl/index.php/s/2a6T6Z8oWGYnj4S/download/osgRC_3186.7z"
+    FILENAME "osgrc_3186.7z"
+    SHA512 43a43440f0dcc3d6ea8af5328e74c0659f3691bdb7c1e50f4267c8fad7dde416ce9b9e2933ef848dc57de0ad3357b562596b3f8564fcca9ea17122db6f8f0141
+)
+else()
+message("archive ${archive}")
+execute_process(COMMAND certutil -hashfile ${archive} SHA512)
+#return()
+endif()
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE ${archive}
+	NO_REMOVE_ONE_LEVEL
 )
 
+
+
+#vcpkg_from_git(
+#    OUT_SOURCE_PATH SOURCE_PATH
+#    URL E:\\osg\\36\\laurens\\osgRC
+#    REF 879005dc609c6cf8faa43529a3613b5a5003c2d4
+#    HEAD_REF main
+#)
+
+file(WRITE "${SOURCE_PATH}\\todo.txt" "License: todo")
 file(WRITE "${SOURCE_PATH}\\src\\icons\\revision.bat" "EXIT 0")
-file(WRITE "${SOURCE_PATH}\\src\\revision.h" "#define OSG_RC_REVISION \"${OSGRC_VER}\"\n#define OSG_RC_REVISION_UNQUOTE 3176\n#define OSG_RC_REVISION_UNQUOTE_SVN_VERSION ${OSG_VER}\n#define OSG_RC_REVISION_MOD 0\n")
+file(WRITE "${SOURCE_PATH}\\src\\revision.h" "#define OSG_RC_REVISION \"${OSGRC_VER}\"\n#define OSG_RC_REVISION_UNQUOTE ${OSGRC_VER}\n#define OSG_RC_REVISION_MOD 0\n")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VNC_DYNAMIC)
 
