@@ -1,11 +1,11 @@
 set(OSG_VER 3.6.5)
 
 vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO LaurensVoerman/OpenSceneGraph
-	REF 4c481103d3bf55dd29cf7b3949350747b639692f
-	SHA512 2a6fa87fcd403af4c53fd2adb5871f65ba6b278e72878ec162078588ddca0c3bfc6e5f60d1b352a7d818d829bab53f99c9e11080b2e411e276b4bc4bd5b6c27a
-	HEAD_REF mine-3.6
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO LaurensVoerman/OpenSceneGraph
+    REF 4c481103d3bf55dd29cf7b3949350747b639692f
+    SHA512 2a6fa87fcd403af4c53fd2adb5871f65ba6b278e72878ec162078588ddca0c3bfc6e5f60d1b352a7d818d829bab53f99c9e11080b2e411e276b4bc4bd5b6c27a
+    HEAD_REF mine-3.6
     PATCHES
         link-libraries.patch
         collada.patch
@@ -16,6 +16,7 @@ vcpkg_from_github(
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
         openexr4.patch
         unofficial-export.patch
+		dicom_flags.patch
 )
 
 file(REMOVE
@@ -69,6 +70,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         vnc         CMAKE_REQUIRE_FIND_PACKAGE_LibVNCServer
         fbx         BUILD_OSG_PLUGIN_FBX
         fbx         CMAKE_REQUIRE_FIND_PACKAGE_FBX
+        dicom       BUILD_OSG_PLUGIN_DICOM
+        dicom       CMAKE_REQUIRE_FIND_PACKAGE_DCMTK
         lua         BUILD_OSG_PLUGIN_LUA
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
         sdl1        BUILD_OSG_PLUGIN_SDL
@@ -100,7 +103,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-	NO_CHARSET_FLAG
+    NO_CHARSET_FLAG
     OPTIONS
         ${FEATURE_OPTIONS}
         -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
@@ -108,7 +111,6 @@ vcpkg_cmake_configure(
         -DOSG_MSVC_VERSIONED_DLL=OFF
         -DOSG_DETERMINE_WIN_VERSION=OFF
         -DUSE_3RDPARTY_BIN=OFF
-        -DBUILD_OSG_PLUGIN_DICOM=OFF
         -DBUILD_OSG_PLUGIN_OPENCASCADE=OFF
         -DBUILD_OSG_PLUGIN_INVENTOR=OFF
         -DBUILD_OSG_PLUGIN_DIRECTSHOW=OFF
@@ -120,7 +122,6 @@ vcpkg_cmake_configure(
         -DBUILD_DASHBOARD_REPORTS=OFF
         -DCMAKE_CXX_STANDARD=11
         -DCMAKE_DISABLE_FIND_PACKAGE_FFmpeg=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_DCMTK=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=ON

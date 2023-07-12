@@ -158,6 +158,12 @@
     "fbx": {
       "description": "Build the fbx plugin - needst FBK-SDK"
     },
+    "dicom": {
+      "description": "Build the DICOM plugin",
+      "dependencies": [
+        "dcmtk"
+      ]
+    },
     "packages": {
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },

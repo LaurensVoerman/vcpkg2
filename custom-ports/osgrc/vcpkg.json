@@ -18,6 +18,7 @@
           "default-features": false,
           "features": [
             "fbx",
+            "dicom",
             "tools"
           ]
     },
