@@ -1,0 +1,147 @@
+diff --git "a/examples/osgaudiomultiple/osgaudiomultiple.cpp" "b/examples/osgaudiomultiple/osgaudiomultiple.cpp"
+index c19a8a4..dedf56b 100644
+--- "a/examples/osgaudiomultiple/osgaudiomultiple.cpp"
++++ "b/examples/osgaudiomultiple/osgaudiomultiple.cpp"
+@@ -80,91 +80,92 @@ osg::AnimationPath* createAnimationPath(const osg::Vec3& center,float radius,dou
+     }
+     return animationPath;    
+ }
+-
+-osg::Node* createBase(const osg::Vec3& center,float radius)
++osg::Node* createBase(const osg::Vec3& center, float radius)
+ {
+-
+     int numTilesX = 10;
+     int numTilesY = 10;
+-    
+-    float width = 2*radius;
+-    float height = 2*radius;
+-    
+-    osg::Vec3 v000(center - osg::Vec3(width*0.5f,height*0.5f,0.0f));
+-    osg::Vec3 dx(osg::Vec3(width/((float)numTilesX),0.0,0.0f));
+-    osg::Vec3 dy(osg::Vec3(0.0f,height/((float)numTilesY),0.0f));
+-    
++
++    float width = 2 * radius;
++    float height = 2 * radius;
++
++    osg::Vec3 v000(center - osg::Vec3(width * 0.5f, height * 0.5f, 0.0f));
++    osg::Vec3 dx(osg::Vec3(width / ((float)numTilesX), 0.0, 0.0f));
++    osg::Vec3 dy(osg::Vec3(0.0f, height / ((float)numTilesY), 0.0f));
++
+     // fill in vertices for grid, note numTilesX+1 * numTilesY+1...
+     osg::Vec3Array* coords = new osg::Vec3Array;
+     int iy;
+-    for(iy=0;iy<=numTilesY;++iy)
++    for (iy = 0; iy <= numTilesY; ++iy)
+     {
+-        for(int ix=0;ix<=numTilesX;++ix)
++        for (int ix = 0; ix <= numTilesX; ++ix)
+         {
+-            coords->push_back(v000+dx*(float)ix+dy*(float)iy);
++            coords->push_back(v000 + dx * (float)ix + dy * (float)iy);
+         }
+     }
+-    
++
+     //Just two colours - black and white.
+     osg::Vec4Array* colors = new osg::Vec4Array;
+-    colors->push_back(osg::Vec4(1.0f,1.0f,1.0f,1.0f)); // white
+-    colors->push_back(osg::Vec4(0.0f,0.0f,0.0f,1.0f)); // black
+-    int numColors=colors->size();
+-    
+-    
+-    int numIndicesPerRow=numTilesX+1;
+-    osg::UByteArray* coordIndices = new osg::UByteArray; // assumes we are using less than 256 points...
+-    osg::UByteArray* colorIndices = new osg::UByteArray;
+-    for(iy=0;iy<numTilesY;++iy)
++    colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f)); // white
++    colors->push_back(osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f)); // black
++    int numColors = colors->size();
++
++
++    int numIndicesPerRow = numTilesX + 1;
++    //    osg::UByteArray* coordIndices = new osg::UByteArray; // assumes we are using less than 256 points...
++    //    osg::UByteArray* colorIndices = new osg::UByteArray;
++    unsigned int numWhileTiles = ((numTilesX * numTilesY) + 1) / 2;
++    unsigned int numBlackTiles = ((numTilesX * numTilesY)) / 2;
++    osg::DrawElementsUShort* whileTiles = new osg::DrawElementsUShort(GL_TRIANGLES, 6 * numWhileTiles);//0 1 2 1 3 2
++    osg::DrawElementsUShort* blackTiles = new osg::DrawElementsUShort(GL_TRIANGLES, 6 * numBlackTiles);//0 1 2 1 3 2
++    unsigned int nextWhiteTileIndex = 0;
++    unsigned int nextBlackTileIndex = 0;
++    for (iy = 0; iy < numTilesY; ++iy)
+     {
+-        for(int ix=0;ix<numTilesX;++ix)
++        for (int ix = 0; ix < numTilesX; ++ix)
+         {
+-            // four vertices per quad.
+-            coordIndices->push_back(ix    +(iy+1)*numIndicesPerRow);
+-            coordIndices->push_back(ix    +iy*numIndicesPerRow);
+-            coordIndices->push_back((ix+1)+iy*numIndicesPerRow);
+-            coordIndices->push_back((ix+1)+(iy+1)*numIndicesPerRow);
+-            
+-            // one color per quad
+-            colorIndices->push_back((ix+iy)%numColors);
++            unsigned int colorIndex = (ix + iy) % numColors;
++            unsigned int nextTileIndex = (colorIndex == 0) ? nextWhiteTileIndex : nextBlackTileIndex;
++            osg::DrawElementsUShort* Tiles = (colorIndex == 0) ? whileTiles : blackTiles;
++            (*Tiles)[nextTileIndex] = ix + iy * numIndicesPerRow;
++            (*Tiles)[nextTileIndex + 1] = (*Tiles)[nextTileIndex + 4] = ix + (iy + 1) * numIndicesPerRow;
++            (*Tiles)[nextTileIndex + 2] = (*Tiles)[nextTileIndex + 3] = (ix + 1) + iy * numIndicesPerRow;
++            (*Tiles)[nextTileIndex + 5] = (ix + 1) + iy * numIndicesPerRow;
++
++            if (colorIndex == 0) nextWhiteTileIndex += 6;
++            else nextBlackTileIndex += 6;
+         }
+     }
+-    
+ 
+     // set up a single normal
+     osg::Vec3Array* normals = new osg::Vec3Array;
+-    normals->push_back(osg::Vec3(0.0f,0.0f,1.0f));
+-    
+-#if OSG_VERSION_GREATER_THAN(3,2,0)
+-    deprecated_osg::Geometry* geom = new deprecated_osg::Geometry;
+-#else
++    normals->push_back(osg::Vec3(0.0f, 0.0f, 1.0f));
++
++
+     osg::Geometry* geom = new osg::Geometry;
+-#endif
++
+     geom->setVertexArray(coords);
+-    geom->setVertexIndices(coordIndices);
+-    
+-    geom->setColorArray(colors);
+-    geom->setColorIndices(colorIndices);
+ 
++    geom->setColorArray(colors);
+ #if OSG_VERSION_GREATER_THAN(3,2,0)
+-    geom->setColorBinding(deprecated_osg::Geometry::BIND_PER_PRIMITIVE);
++    colors->setBinding(osg::Array::BIND_PER_PRIMITIVE_SET);
+ #else
+     geom->setColorBinding(osg::Geometry::BIND_PER_PRIMITIVE);
+ #endif
+ 
+     geom->setNormalArray(normals);
+-
+ #if OSG_VERSION_GREATER_THAN(3,2,0)
+-    geom->setNormalBinding(deprecated_osg::Geometry::BIND_OVERALL);
++    normals->setBinding(osg::Array::BIND_OVERALL);
+ #else
+     geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
+ #endif
+ 
+-    geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,coordIndices->size()));
+-    
++    //geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS, 0, coordIndices->size()));
++    geom->addPrimitiveSet(whileTiles);
++    geom->addPrimitiveSet(blackTiles);
++
+     osg::Geode* geode = new osg::Geode;
+     geode->addDrawable(geom);
+-    
++
+     return geode;
+ }
+ 

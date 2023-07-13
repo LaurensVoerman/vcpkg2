@@ -1,0 +1,29 @@
+{
+  "name": "osgaudio",
+  "version": "85",
+  "port-version": 1,
+  "description": "OpenSceneGraph nodekit that wraps OpenAL and FMOD to enable sound toolkits",
+  "homepage": "https://github.com/mccdo/osgaudio",
+  "license": "LGPL-2.1-only WITH FLTK-exception",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+          "name": "osg",
+          "default-features": false
+    },
+    {
+          "name": "openal-soft",
+          "default-features": false
+    },
+	"freealut",
+	"libogg",
+	"libvorbis"
+  ]
+}

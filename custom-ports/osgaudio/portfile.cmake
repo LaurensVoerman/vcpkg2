@@ -1,51 +1,24 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+#vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT OUT_CUDA_VERSION CUDA_VERSION)
 
-set(OSGRC_VER ${VERSION})
 set(OSG_VER 3.6.5)
 
 #target for osgPlugins
 set(osg_plugins_subdir "osgPlugins-${OSG_VER}")
-message("${osg_plugins_subdir}")
 
-#Find file in current dir
-find_file(archive osgrc_${OSGRC_VER}.7z PATHS ${CMAKE_CURRENT_LIST_DIR})
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mccdo/osgaudio
+    REF be872549c8452cbbf44ec8235dfa5a74566cb06d
+    SHA512 a5503cac0346f6a3c2bfd801af626071bbc8602f4b41811065ff6c464219bf68e538a77ae7797687abc6e06554dfa07542f8257d192b280d2b262fd69865cd59
+    HEAD_REF master
+	PATCHES
+	  audiobase.patch
+	  example.patch
+	  example_multiple.patch
+	  findosg.patch
 
-#https://drive.google.com/file/d/1FAP4BpKULoBiqgOHTZ68qJzJZrb10AUY/view?usp=sharing
-#cannot find a direct download link for drive,
-#using unishare...
-if(NOT archive)
-vcpkg_download_distfile(
-    archive # "archive" is set to the path to the downloaded file
-    URLS "https://unishare.nl/index.php/s/2a6T6Z8oWGYnj4S/download/osgRC_3186.7z"
-    FILENAME "osgrc_3186.7z"
-    SHA512 43a43440f0dcc3d6ea8af5328e74c0659f3691bdb7c1e50f4267c8fad7dde416ce9b9e2933ef848dc57de0ad3357b562596b3f8564fcca9ea17122db6f8f0141
 )
-else()
-message("archive ${archive}")
-execute_process(COMMAND certutil -hashfile ${archive} SHA512)
-#return()
-endif()
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE ${archive}
-	NO_REMOVE_ONE_LEVEL
-)
-
-
-
-#vcpkg_from_git(
-#    OUT_SOURCE_PATH SOURCE_PATH
-#    URL E:\\osg\\36\\laurens\\osgRC
-#    REF 879005dc609c6cf8faa43529a3613b5a5003c2d4
-#    HEAD_REF main
-#)
-file(REMOVE "${SOURCE_PATH}\\CMakeModules\\FindOSGAudio.cmake" )
-file(WRITE "${SOURCE_PATH}\\todo.txt" "License: todo")
-file(WRITE "${SOURCE_PATH}\\src\\icons\\revision.bat" "EXIT 0")
-file(WRITE "${SOURCE_PATH}\\src\\revision.h" "#define OSG_RC_REVISION \"${OSGRC_VER}\"\n#define OSG_RC_REVISION_UNQUOTE ${OSGRC_VER}\n#define OSG_RC_REVISION_MOD 0\n")
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VNC_DYNAMIC)
 
 #find visual studio generator
 set(generator "")
@@ -53,13 +26,29 @@ z_vcpkg_get_visual_studio_generator(OUT_GENERATOR generator OUT_ARCH generator_a
 
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 
+if(MSVC)
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /source-charset:.1252")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /source-charset:.1252")
+endif()
+
+option( OSGAUDIO_INSTALL_DATA "Enable to add the data directory to the install target" ON )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+	NO_CHARSET_FLAG
     GENERATOR ${generator}
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_FFmpeg=ON
+        -D0_ENABLE_SUBSYSTEM_OPENAL=ON
+		-D0_ENABLE_SUBSYSTEM_FMOD=OFF
+		-DOSGAUDIO_INSTALL_DATA=OFF
+		-D0_BUILD_EXAMPLES_OSGAUDIO=OFF
+		-D0_BUILD_EXAMPLES_OSGAUDIO_LOWLEVEL=OFF
 	MAYBE_UNUSED_VARIABLES
-		WITH_SYSTEMD
+	    CMAKE_DISABLE_FIND_PACKAGE_FFmpeg
+		FETCHCONTENT_FULLY_DISCONNECTED
+        CMAKE_INSTALL_BINDIR
+        CMAKE_INSTALL_LIBDIR
+        FETCHCONTENT_FULLY_DISCONNECTED
+        _VCPKG_ROOT_DIR
 )
 
 
@@ -70,6 +59,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+if(MOVE_TOOLS)
 #move exe files to "tools"
 #not usefull without plugin dependencies
 #set(tools viewer gui osgconvEx mkthumb)
@@ -78,7 +68,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
   file(GLOB osgrc_exe "${CURRENT_PACKAGES_DIR}/bin/*.exe")
   file(INSTALL ${osgrc_exe} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
   file(REMOVE ${osgrc_exe})
-  #file(WRITE "${CURRENT_PACKAGES_DIR}/tools/notes.txt" "VCPKG_BUILD_TYPE: ${VCPKG_BUILD_TYPE}\nosgrc_exe: ${osgrc_exe}\n")
 
 #if(NOT VCPKG_BUILD_TYPE)
 #not for release only build
@@ -88,7 +77,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
   file(REMOVE ${osgrcd_exe})
   #file(WRITE "${CURRENT_PACKAGES_DIR}/tools/notesD.txt" "VCPKG_BUILD_TYPE: ${VCPKG_BUILD_TYPE}\nosgrcd_exe: ${osgrcd_exe}\n")
 #endif()
-
+endif()
 #move plugins
 
 #set(osg_plugins osgdb_arg.dll osgdb_child.dll osgdb_crn.dll osgdb_dds.dll osgdb_mip.dll osgdb_ptfilter.dll osgdb_wmts.dll)
@@ -105,6 +94,8 @@ if(NOT VCPKG_BUILD_TYPE)
     file(INSTALL ${osg_plugin_dll} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/todo.txt"
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/COPYING"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright
 )

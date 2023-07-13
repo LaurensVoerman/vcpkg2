@@ -1,0 +1,20 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index caaf324..57a3e0e 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -18,8 +18,13 @@ SET(OSGAUDIO_VERSION ${OSGAUDIO_MAJOR_VERSION}.${OSGAUDIO_MINOR_VERSION}.${OSGAU
+ # We have some custom .cmake scripts not in the official distribution.
+ SET(CMAKE_MODULE_PATH "${osgAudio_SOURCE_DIR}/CMakeModules;${CMAKE_MODULE_PATH}")
+ 
+-include( FindOSGHelper )
+-
++#include( FindOSGHelper )
++set(_osgComponents osg osgDB osgUtil osgGA osgText osgViewer OpenThreads)
++find_package( OpenSceneGraph 2.6.1 REQUIRED COMPONENTS ${_osgComponents} )
++set(OSG_INCLUDE_DIRS ${OSG_INCLUDE_DIR})
++#if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++#set(OSG_LIBRARIES ${OSG_LIBRARY_DEBUG} ${OSGDB_LIBRARY_DEBUG} ${OSGUTIL_LIBRARY_DEBUG} ${OSGGA_LIBRARY_DEBUG} ${OSGTEXT_LIBRARY_DEBUG} ${OSGVIEWER_LIBRARY_DEBUG} ${OPENTHREADS_LIBRARY_DEBUG})
++set(OSG_LIBRARIES ${OSG_LIBRARY} ${OSGDB_LIBRARY} ${OSGUTIL_LIBRARY} ${OSGGA_LIBRARY} ${OSGTEXT_LIBRARY} ${OSGVIEWER_LIBRARY} ${OPENTHREADS_LIBRARY})
+ 
+ SET(SUBSYSTEM_INCLUDES )
+ SET(SUBSYSTEM_LINKS )

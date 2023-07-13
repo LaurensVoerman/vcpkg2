@@ -1,0 +1,29 @@
+diff --git a/include/openalpp/AudioBase.h b/include/openalpp/AudioBase.h
+index fa0d8a8..5b27411 100644
+--- a/include/openalpp/AudioBase.h
++++ b/include/openalpp/AudioBase.h
+@@ -72,7 +72,7 @@ namespace openalpp {
+         /**
+         * Pointer to context.
+         */
+-#ifndef WIN32
++#ifndef WIN32_OLD_MSVC
+ #if OPENAL_VERSION < 2007
+         static void *context_;
+ #else // OPENAL_VERSION < 2007
+ src/openalpp/AudioBase.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/openalpp/AudioBase.cpp b/src/openalpp/AudioBase.cpp
+index 821af3a..72d650e 100644
+--- a/src/openalpp/AudioBase.cpp
++++ b/src/openalpp/AudioBase.cpp
+@@ -181,7 +181,7 @@ const char *openalpp::alGetErrorString(ALenum error)
+ // Static members
+ int AudioBase::instances_=0;
+ ALCdevice *AudioBase::device_=NULL;
+-#ifndef WIN32
++#ifndef WIN32_OLD_MSVC
+ #if OPENAL_VERSION < 2007
+ void *AudioBase::context_=NULL;
+ #else // OPENAL_VERSION < 2007
