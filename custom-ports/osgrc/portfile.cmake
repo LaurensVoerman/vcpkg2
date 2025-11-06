@@ -46,6 +46,7 @@ file(WRITE "${SOURCE_PATH}\\src\\icons\\revision.bat" "EXIT 0")
 file(WRITE "${SOURCE_PATH}\\src\\revision.h" "#define OSG_RC_REVISION \"${OSGRC_VER}\"\n#define OSG_RC_REVISION_UNQUOTE ${OSGRC_VER}\n#define OSG_RC_REVISION_MOD 0\n")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VNC_DYNAMIC)
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 #find visual studio generator
 set(generator "")
