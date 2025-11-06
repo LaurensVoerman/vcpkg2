@@ -1,0 +1,25 @@
+From 283c6e05c8844f8d32558eb50ec0763242fcd115 Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Wed, 5 Nov 2025 15:06:00 +0100
+Subject: [PATCH] mod
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8e0307..963d4df 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -73,7 +73,7 @@ install(FILES src/gta/gta.h src/gta/gta.hpp "${CMAKE_BINARY_DIR}/src/gta/gta_ver
+ # pkg-config file: gta.pc
+ set(prefix "${CMAKE_INSTALL_PREFIX}")
+ set(exec_prefix "\${prefix}")
+-set(libdir "\${exec_prefix}/lib${LIB_SUFFIX}")
++set(libdir "\${prefix}/lib")
+ set(includedir "\${prefix}/include")
+ set(GTA_PKGCONFIG_LIBRARIES_PRIVATE "")
+ foreach(GTA_PKGCONFIG_LIBRARY_PRIV ${LIBLZMA_LIBRARIES} ${BZIP2_LIBRARIES} ${ZLIB_LIBRARIES})
+-- 
+2.51.0.windows.2
+
