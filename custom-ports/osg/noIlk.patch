@@ -1,0 +1,25 @@
+From 115d48613aa31343074ec19429032ec5beefabe6 Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Thu, 6 Nov 2025 15:43:08 +0100
+Subject: [PATCH] mod
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index afecf3a..b07d5c5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -401,7 +401,7 @@ IF(WIN32 AND NOT ANDROID)
+     IF(MSVC)
+         OPTION(OSG_MSVC_VERSIONED_DLL "Set to ON to build OpenSceneGraph with versioned dll names" ON)
+         MARK_AS_ADVANCED(OSG_MSVC_VERSIONED_DLL)
+-        OPTION(OSG_MSVC_DEBUG_INCREMENTAL_LINK "Set to OFF to build OpenSceneGraph without incremental linking in debug (release is off by default)" ON)
++        OPTION(OSG_MSVC_DEBUG_INCREMENTAL_LINK "Set to OFF to build OpenSceneGraph without incremental linking in debug (release is off by default)" OFF)
+         MARK_AS_ADVANCED(OSG_MSVC_DEBUG_INCREMENTAL_LINK)
+         IF(NOT OSG_MSVC_DEBUG_INCREMENTAL_LINK)
+             SET(CMAKE_MODULE_LINKER_FLAGS_DEBUG "/debug /INCREMENTAL:NO")
+-- 
+2.51.0.windows.2
+

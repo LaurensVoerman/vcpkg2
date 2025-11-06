@@ -3,8 +3,8 @@ set(OSG_VER 3.6.5)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LaurensVoerman/OpenSceneGraph
-    REF 4c481103d3bf55dd29cf7b3949350747b639692f
-    SHA512 2a6fa87fcd403af4c53fd2adb5871f65ba6b278e72878ec162078588ddca0c3bfc6e5f60d1b352a7d818d829bab53f99c9e11080b2e411e276b4bc4bd5b6c27a
+    REF 3fc671e7cc3838c080e080c27c3b3c05724a5970
+    SHA512 4cb58a85ba49214618b69facb5d13369fe476facc5146dd0844b9c3dd5f661a1eb91495ce01aadc12ee03cb3fbc6c4297548fb91698cbbc97a97cee14dbd5042
     HEAD_REF mine-3.6
     PATCHES
         link-libraries.patch
@@ -17,6 +17,9 @@ vcpkg_from_github(
         openexr4.patch
         unofficial-export.patch
 		dicom_flags.patch
+		vncExtraLibs.patch
+		FindLzo.patch
+		noIlk.patch
 )
 
 file(REMOVE
@@ -26,8 +29,12 @@ file(REMOVE
     "${SOURCE_PATH}/CMakeModules/FindOpenEXR.cmake"
     "${SOURCE_PATH}/CMakeModules/FindSDL2.cmake"
 )
+# IGNORE TRIPLET and build dll version
+#set(OSGPKG_LIBRARY_LINKAGE "${VCPKG_LIBRARY_LINKAGE}")
+set(OSGPKG_LIBRARY_LINKAGE "dynamic")
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OSG_DYNAMIC)
+string(COMPARE EQUAL "${OSGPKG_LIBRARY_LINKAGE}" "dynamic" OSG_DYNAMIC)
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -96,7 +103,7 @@ foreach(line IN LISTS plugin_lines)
     list(APPEND plugin_vars "BUILD_OSG_PLUGIN_${plugin_upper}")
 endforeach()
 
-if(MSVC)
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /source-charset:.1252")
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /source-charset:.1252")
 endif()
@@ -143,7 +150,7 @@ vcpkg_copy_pdbs()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-osg-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-osg/unofficial-osg-config.cmake" @ONLY)
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-osg)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(OSGPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
 endif()
 
@@ -158,7 +165,7 @@ if("tools" IN_LIST FEATURES)
     endif()
 
     set(tools osgversion present3D)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    if(OSGPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND tools osgviewer osgarchive osgconv osgfilecache)
     endif()
     vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)

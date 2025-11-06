@@ -1,0 +1,39 @@
+From 4fdb265c855dab4cbd2e92e6774038dcff551007 Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Thu, 6 Nov 2025 15:29:51 +0100
+Subject: [PATCH] mod
+
+---
+ src/osgPlugins/vnc/CMakeLists.txt | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/src/osgPlugins/vnc/CMakeLists.txt b/src/osgPlugins/vnc/CMakeLists.txt
+index 9a54b2b..517c625 100644
+--- a/src/osgPlugins/vnc/CMakeLists.txt
++++ b/src/osgPlugins/vnc/CMakeLists.txt
+@@ -1,12 +1,20 @@
+ SET(TARGET_SRC ReaderWriterVNC.cpp )
+-
++FIND_PACKAGE(LZO)
+ INCLUDE_DIRECTORIES(${LIBVNCSERVER_INCLUDE_DIR})
+ 
+ SET(TARGET_EXTERNAL_LIBRARIES
+     ${LIBVNCCLIENT_LIBRARY}
+     ${ZLIB_LIBRARIES}
+     ${JPEG_LIBRARY} )
+-
++IF(WIN32)
++SET(TARGET_EXTERNAL_LIBRARIES ${TARGET_EXTERNAL_LIBRARIES} 
++  Ws2_32.lib
++  Crypt32.lib
++  ${SSL_EAY_RELEASE}
++  ${LIB_EAY_RELEASE}
++  ${LZO_LIBRARIES}
++  )
++ENDIF(WIN32)
+ SET(TARGET_ADDED_LIBRARIES osgWidget )
+ 
+ #### end var setup  ###
+-- 
+2.51.0.windows.2
+
