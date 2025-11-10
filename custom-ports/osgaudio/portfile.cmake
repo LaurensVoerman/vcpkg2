@@ -17,7 +17,6 @@ vcpkg_from_github(
 	  example.patch
 	  example_multiple.patch
 	  findosg.patch
-
 )
 
 #find visual studio generator
@@ -26,17 +25,21 @@ z_vcpkg_get_visual_studio_generator(OUT_GENERATOR generator OUT_ARCH generator_a
 
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 
-if(MSVC)
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /source-charset:.1252")
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /source-charset:.1252")
 endif()
-
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /DALUT_BUILD_STATIC")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /DALUT_BUILD_STATIC")
+endif()
 option( OSGAUDIO_INSTALL_DATA "Enable to add the data directory to the install target" ON )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 	NO_CHARSET_FLAG
     GENERATOR ${generator}
     OPTIONS
+	    -DVCPKG_LIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE}
         -D0_ENABLE_SUBSYSTEM_OPENAL=ON
 		-D0_ENABLE_SUBSYSTEM_FMOD=OFF
 		-DOSGAUDIO_INSTALL_DATA=OFF

@@ -1,8 +1,17 @@
-diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
-index caaf324..57a3e0e 100644
---- "a/CMakeLists.txt"
-+++ "b/CMakeLists.txt"
-@@ -18,8 +18,13 @@ SET(OSGAUDIO_VERSION ${OSGAUDIO_MAJOR_VERSION}.${OSGAUDIO_MINOR_VERSION}.${OSGAU
+From 035a165282bea48f7d497350754d92b897e2b587 Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Mon, 10 Nov 2025 16:27:05 +0100
+Subject: [PATCH] mod
+
+---
+ CMakeLists.txt | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index caaf324..c0336e2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,8 +18,11 @@ SET(OSGAUDIO_VERSION ${OSGAUDIO_MAJOR_VERSION}.${OSGAUDIO_MINOR_VERSION}.${OSGAU
  # We have some custom .cmake scripts not in the official distribution.
  SET(CMAKE_MODULE_PATH "${osgAudio_SOURCE_DIR}/CMakeModules;${CMAKE_MODULE_PATH}")
  
@@ -12,9 +21,23 @@ index caaf324..57a3e0e 100644
 +set(_osgComponents osg osgDB osgUtil osgGA osgText osgViewer OpenThreads)
 +find_package( OpenSceneGraph 2.6.1 REQUIRED COMPONENTS ${_osgComponents} )
 +set(OSG_INCLUDE_DIRS ${OSG_INCLUDE_DIR})
-+#if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-+#set(OSG_LIBRARIES ${OSG_LIBRARY_DEBUG} ${OSGDB_LIBRARY_DEBUG} ${OSGUTIL_LIBRARY_DEBUG} ${OSGGA_LIBRARY_DEBUG} ${OSGTEXT_LIBRARY_DEBUG} ${OSGVIEWER_LIBRARY_DEBUG} ${OPENTHREADS_LIBRARY_DEBUG})
 +set(OSG_LIBRARIES ${OSG_LIBRARY} ${OSGDB_LIBRARY} ${OSGUTIL_LIBRARY} ${OSGGA_LIBRARY} ${OSGTEXT_LIBRARY} ${OSGVIEWER_LIBRARY} ${OPENTHREADS_LIBRARY})
  
  SET(SUBSYSTEM_INCLUDES )
  SET(SUBSYSTEM_LINKS )
+@@ -44,6 +47,12 @@ IF(0_ENABLE_SUBSYSTEM_OPENAL)
+   #setup include and link Package names for this subsystem
+   SET(SUBSYSTEM_OPENAL_INCLUDES ALUT OPENAL OGG VORBIS VORBISFILE)
+   SET(SUBSYSTEM_OPENAL_LINKS ALUT OPENAL OGG VORBIS VORBISFILE)
++IF(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
++  find_package(fmt CONFIG REQUIRED)
++  SET(FMT_LIBRARIES fmt::fmt )
++  SET(AVRT_LIBRARIES "avrt.lib" )
++  SET(SUBSYSTEM_OPENAL_LINKS ${SUBSYSTEM_OPENAL_LINKS} FMT AVRT)
++ENDIF(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+   #append subsystem link/include package names to existing contents 
+   SET(SUBSYSTEM_INCLUDES ${SUBSYSTEM_INCLUDES} ${SUBSYSTEM_OPENAL_INCLUDES})
+   SET(SUBSYSTEM_LINKS  ${SUBSYSTEM_LINKS} ${SUBSYSTEM_OPENAL_LINKS})
+-- 
+2.51.0.windows.2
+
