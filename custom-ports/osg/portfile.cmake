@@ -20,6 +20,9 @@ vcpkg_from_github(
 		vncExtraLibs.patch
 		FindLzo.patch
 		noIlk.patch
+		colladaStatic.patch
+		sdlStatic.patch
+		viewerSDLstatic.patch
 )
 
 file(REMOVE
@@ -39,6 +42,8 @@ string(COMPARE EQUAL "${OSGPKG_LIBRARY_LINKAGE}" "dynamic" OSG_DYNAMIC)
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DOSG_USE_UTF8_FILENAME=ON)
+    list(APPEND OPTIONS -DVCPKG_LIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE})
+	
 endif()
 # Skip try_run checks
 if(VCPKG_TARGET_IS_MINGW)

@@ -1,0 +1,28 @@
+From f6370964aad58a1f487a70d045606f6d3083134c Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Fri, 7 Nov 2025 11:34:11 +0100
+Subject: [PATCH] sdlStatic
+
+---
+ src/osgPlugins/sdl/CMakeLists.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/osgPlugins/sdl/CMakeLists.txt b/src/osgPlugins/sdl/CMakeLists.txt
+index ff1502e..a2a430b 100644
+--- a/src/osgPlugins/sdl/CMakeLists.txt
++++ b/src/osgPlugins/sdl/CMakeLists.txt
+@@ -11,6 +11,10 @@ SET(TARGET_H
+ )
+ 
+ SET(TARGET_ADDED_LIBRARIES osgGA)
+-
++IF(WIN32)
++  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
++    SET(TARGET_ADDED_LIBRARIES ${TARGET_ADDED_LIBRARIES} Winmm dxguid)
++  ENDIF()
++ENDIF(WIN32)
+ #### end var setup  ###
+ SETUP_PLUGIN(sdl sdl)
+-- 
+2.51.0.windows.2
+

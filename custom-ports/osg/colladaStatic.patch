@@ -1,0 +1,56 @@
+From a6d863785e58edb9f2f946d12041f0970aa4384e Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Mon, 10 Nov 2025 17:50:24 +0100
+Subject: [PATCH] sdlStatic
+
+---
+ src/osgPlugins/dae/CMakeLists.txt | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/src/osgPlugins/dae/CMakeLists.txt b/src/osgPlugins/dae/CMakeLists.txt
+index af03fb8..2fa1dba 100644
+--- a/src/osgPlugins/dae/CMakeLists.txt
++++ b/src/osgPlugins/dae/CMakeLists.txt
+@@ -39,6 +39,14 @@ SET(TARGET_H
+     ReaderWriterDAE.h
+ )
+ 
++if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
++set(COLLADA_STATIC_LIBRARY "YES")
++set(COLLADA_DYNAMIC_LIBRARY "NO")
++endif()
++
++IF(VCPKG_LIBRARY_LINKAGE)
++find_package(Boost COMPONENTS filesystem system REQUIRED)
++ENDIF()
+ 
+ IF(COLLADA_DYNAMIC_LIBRARY AND COLLADA_STATIC_LIBRARY)
+     OPTION(COLLADA_USE_STATIC "Set to ON to build OpenSceneGraph with static Collada support." OFF)
+@@ -58,6 +66,16 @@ ENDIF()
+ IF(COLLADA_USE_STATIC)
+     IF(WIN32)
+         ADD_DEFINITIONS(-DBOOST_ALL_NO_LIB)
++		IF(VCPKG_LIBRARY_LINKAGE)
++		SET(TARGET_LIBRARIES_VARS
++            COLLADA_DYNAMIC_LIBRARY
++            COLLADA_LIBXML_LIBRARY
++            COLLADA_ZLIB_LIBRARY
++            COLLADA_MINIZIP_LIBRARY
++			Boost_FILESYSTEM_LIBRARY
++			Boost_SYSTEM_LIBRARY
++			)
++		ELSE()
+         SET(TARGET_LIBRARIES_VARS
+             COLLADA_STATIC_LIBRARY
+             COLLADA_LIBXML_LIBRARY
+@@ -67,6 +85,7 @@ IF(COLLADA_USE_STATIC)
+             COLLADA_MINIZIP_LIBRARY
+             COLLADA_BOOST_FILESYSTEM_LIBRARY
+             COLLADA_BOOST_SYSTEM_LIBRARY)
++		ENDIF()
+     ELSE()
+         SET(TARGET_LIBRARIES_VARS
+             COLLADA_STATIC_LIBRARY
+-- 
+2.51.0.windows.2
+
