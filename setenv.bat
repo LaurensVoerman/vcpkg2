@@ -17,6 +17,20 @@ SET VCPKG_DEFAULT_TRIPLET=x64-windows-mixed
 rem use my custom ports
 set VCPKG_OVERLAY_PORTS=%PKG2%\custom-ports
 set VCPKG_OVERLAY_TRIPLETS=%PKG2%\custom-triplets
+
+
+rem setup for LVWS drive E 
+pushd ..\vcpkg
+set VCPKG_DOWNLOADS=%CD%\downloads
+set VCPKG_ROOT=%CD%
+popd
+set VCPKG_DEFAULT_BINARY_CACHE=D:\drive_E\binary-cache
+set VCPKG_DEFAULT_TRIPLET=x64-windows-static-md
+set VCPKG_OVERLAY_PORTS=E:\vcpkg2\custom-ports
+
+
+SET VCPKG_DEFAULT_TRIPLET=x64-windows-static-md
+set VCPKG_OVERLAY_TRIPLETS=
 popd
 rem now try something like
 echo vcpkg install fox-toolkit --editable

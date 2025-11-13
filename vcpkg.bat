@@ -1,1 +1,1 @@
-@"%~dp0..\vcpkg\vcpkg.exe" %*
+"%~dp0..\vcpkg\vcpkg.exe" %*
