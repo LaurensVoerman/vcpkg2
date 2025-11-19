@@ -1,3 +1,26 @@
 {
-  "dependencies": [ "osgrc", "osgPlugins" ]
+  "dependencies": [ 
+    "osgrc",
+    {
+          "name": "osg",
+          "default-features": false,
+          "features": [
+            "collada",
+			"docs",
+			"examples",
+			"fontconfig",
+			"freetype",
+			"nvtt",
+			"openexr",
+			"vnc",
+			"lua",
+			"fbx",
+			"dicom",
+			"packages",
+			"plugins",
+			"sdl1",
+			"tools"
+          ]
+    }
+	]
 }
