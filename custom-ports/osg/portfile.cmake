@@ -40,9 +40,10 @@ set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 string(COMPARE EQUAL "${OSGPKG_LIBRARY_LINKAGE}" "dynamic" OSG_DYNAMIC)
 
 set(OPTIONS "")
+set(MU_OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DOSG_USE_UTF8_FILENAME=ON)
-    list(APPEND OPTIONS -DVCPKG_LIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE})
+    list(APPEND MU_OPTIONS -DVCPKG_LIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE})
 	
 endif()
 # Skip try_run checks
@@ -149,6 +150,7 @@ vcpkg_cmake_configure(
         OSG_DETERMINE_WIN_VERSION
         USE_3RDPARTY_BIN
         ${plugin_vars}
+		${MU_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

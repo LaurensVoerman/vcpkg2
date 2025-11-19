@@ -16,9 +16,9 @@ find_file(archive osgrc_${OSGRC_VER}.7z PATHS ${CMAKE_CURRENT_LIST_DIR})
 if(NOT archive)
 vcpkg_download_distfile(
     archive # "archive" is set to the path to the downloaded file
-    URLS "https://unishare.nl/index.php/s/2a6T6Z8oWGYnj4S/download/osgRC_3186.7z"
-    FILENAME "osgrc_3186.7z"
-    SHA512 43a43440f0dcc3d6ea8af5328e74c0659f3691bdb7c1e50f4267c8fad7dde416ce9b9e2933ef848dc57de0ad3357b562596b3f8564fcca9ea17122db6f8f0141
+    URLS "https://unishare.nl/index.php/s/NMp85fLnJmdGmEj/download/osgRC_3217.7z"
+    FILENAME "osgrc_3217.7z"
+    SHA512 23605fa727188419f797c691bc52c213b4b546313424d64bd6a4613dc9df16125f72cef9ac48ce66da03e25abf9b47032d9035b76dcd79b2a3d69795ec8f6634
 )
 else()
 message("archive ${archive}")
