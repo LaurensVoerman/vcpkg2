@@ -1,0 +1,5 @@
+ADD_SUBDIRECTORY(osgconvEx)
+ADD_SUBDIRECTORY(mkthumb)
+
+
+

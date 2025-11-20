@@ -1,0 +1,180 @@
+/*
+ *
+ *
+ * ${CONFIG_IN_TEXT}
+ *
+ *
+ */
+#ifndef CONFIG_H_INCLUDED
+#define CONFIG_H_INCLUDED
+
+// The version of the xml files we can read
+// Version history:
+// version 0:	Before 08-06-2012 our viewer had no versioning
+// version 1:	First version where version number is handled
+//				this version can also read config files with designs
+//				and layers. It can only write config file with
+//				layers.
+// version 2:	Remvoed the option to read designs. Added option to
+//				specify where the road and roomnetwork are loaded from.
+#define OSGRC_VERSION 2
+
+/*
+ * machine-specific settings
+ */
+
+//
+// OSGRC_LITTLE_ENDIAN
+//
+// Set this if the machine we're compiling on is a little-endian one
+// (Currently only used in ByteBuffer.h)
+//
+
+#if defined(WIN32) || defined(__linux)
+	#define OSGRC_LITTLE_ENDIAN 1
+#elif defined(__sgi)
+	#undef OSGRC_LITTLE_ENDIAN
+#else
+	#error Please update the configuration file (Config.h) for this system
+#endif
+
+/*
+ * cluster communication settings
+ */
+
+//
+// BROADCAST_LOCALHOST_ONLY
+//
+// If defined: master won't really broadcast initial existence, but sends UDP packets 
+// directly to localhost (for testing purposes). This also binds TCP sockets to localhost.
+//
+
+#ifdef WIN32
+	#define BROADCAST_LOCALHOST_ONLY
+#elif !defined(__linux) && !defined(__sgi)
+	#error Please update the configuration file (Config.h) for this system
+#endif
+
+//
+// DEFAULT_BROADCAST_ADDRESS
+// The broadcast IP-address to use when none is specified
+//
+// DEFAULT_MASTER_ADDRESS
+// The default IP-address of the master
+//
+
+#if defined(WIN32) || defined(__sgi)
+	#define DEFAULT_BROADCAST_ADDRESS 	"127.0.0.1"
+	#define DEFAULT_MASTER_ADDRESS		"127.0.0.1"
+#elif defined(__linux)
+	#define DEFAULT_BROADCAST_ADDRESS 	"192.168.1.255"
+	#define DEFAULT_MASTER_ADDRESS		"192.168.1.150"
+#else
+	#error Please update the configuration file (Config.h) for this system
+#endif
+
+//
+// NETWORK_PORT
+//
+// Master listens to this TCP port for incoming slave connections
+// Slaves listen to this UDP port for initial broadcast from master
+//
+
+#define NETWORK_PORT	8888
+#define NETWORK_PORT_AGENTS	8889
+
+//
+// MASTER_GUI_LISTEN_PORT
+//
+// The TCP port that the master listens to for a connection from the
+// GUI application
+//
+
+#define MASTER_GUI_LISTEN_PORT			9999
+
+//
+// SHOW_SWAPLOCK_TIME
+//
+// If defined use a timer to determine how much time is spent waiting
+// on the swap-lock barrier
+//
+
+//#define SHOW_SWAPLOCK_TIME
+
+//
+// TIXML_USE_STL
+//
+// Whether TinyXML will internally use STL containers and
+// interface with std::string
+//
+
+#define TIXML_USE_STL
+
+//
+// SEAPORT_DESIGNER_EDITION
+//
+// When this is defined, a number of things in the GUI and console application
+// behave differently:
+//   - both the GUI and console windows will display names in titles etc.,
+//     "Seaport Designer" instead of "OSGRC"
+//   - the 3D cursor in the console is adjusted for a single-screen
+//     viewport, instead of the default theatre 3-screen setup
+//   - the console viewer cannot be quit by using the escape key
+//   - the GUI and console windows are put in a predefined position on the screen,
+//     window sizes are adjusted
+//   - explicit connect/disconnect from the GUI File menu is disabled
+//
+
+#cmakedefine DSP_EDITION ${DSP_EDITION}
+// via appia edition 
+#cmakedefine VP_EDITION ${VP_EDITION}
+
+//internal build;
+#define OSGRC_EDITION (1 - (DSP_EDITION|VP_EDITION))
+
+
+#define DEFAULT_AUTOBACKUP_INTERVAL 0
+
+//use #if INCLUDE_OSGRC_CONFIG_H(OSGRC_EDITION) macro (not #ifdef) to disable so we get an error if #include "Config.h" is missing
+
+#define INCLUDE_OSGRC_CONFIG_H(A) A != 0
+#define ENABLE_STEREO_PANEL    1
+#define ENABLE_ADVANCE_SHADOWS OSGRC_EDITION
+#define ENABLE_SHADOWS         OSGRC_EDITION|VP_EDITION|DSP_EDITION
+#define ENABLE_SWAP_BARRIER    OSGRC_EDITION
+#define ENABLE_MATERIAL_PANEL  OSGRC_EDITION
+#define ENABLE_ANIMATION_PANEL OSGRC_EDITION
+#define ENABLE_ROADS           OSGRC_EDITION|DSP_EDITION
+#define ENABLE_AGENTS          OSGRC_EDITION|DSP_EDITION
+#cmakedefine USE_KINECT          ${USE_KINECT} //OSGRC_EDITION
+#if defined USE_KINECT
+#define ENABLE_KINECT          OSGRC_EDITION
+#else
+#define ENABLE_KINECT          0 //OSGRC_EDITION
+#endif
+#define ENABLE_VOLUME_PANEL    OSGRC_EDITION
+
+//-NO MAXSCRIPT EXPORTER ANYMORE- no "ENABLE_MAXSCRIPT_EXPORT"
+//replaced ENABLE_HELP_IN_3DVIEW 
+#define ENABLE_VIEWER_HELP DSP_EDITION
+
+//
+// Walk mode values. Default heights (distance from eye to ground)
+//
+// WALK_HEIGHT_...
+//
+
+#define WALK_HEIGHT_STANDING	1.70
+#define WALK_HEIGHT_CAR			1.20
+
+#define RUGKINECTINTERFACE_DEFAULT_HOST  "192.168.1.165"
+#define RUGKINECTINTERFACE_DEFAULT_PORT 1986
+
+#define RUGKINECTINTERFACE_CONNECT_TIMEOUT 30
+
+#define RUGKINECTINTERFACE_SERVER_CONNECT_RETRIES 3
+
+// comment to use kinect
+//#define NO_KINECT
+
+#endif
