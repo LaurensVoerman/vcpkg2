@@ -1,0 +1,31 @@
+From 737b840ce9c676c05dfed148c3e578d43cc86666 Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Thu, 20 Nov 2025 16:31:59 +0100
+Subject: [PATCH] AddInstUnZipper
+
+---
+ src/CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 6c6a807..249c5ea 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -27,6 +27,8 @@ set(LASZIP_SOURCES
+     laszip_dll.cpp
+     mydefs.cpp
+ 	lasmessage.cpp
++	laszipper.cpp
++	lasunzipper.cpp
+ )
+ 
+ add_definitions(-DLASZIPDLL_EXPORTS)
+@@ -36,3 +38,4 @@ if(HAVE_UNORDERED_MAP)
+     add_definitions(-DHAVE_UNORDERED_MAP=1)
+ endif(HAVE_UNORDERED_MAP)
+ LASZIP_ADD_LIBRARY(${LASZIP_BASE_LIB_NAME} ${LASZIP_SOURCES})
++LASZIP_ADD_INCLUDES("laszip" "${CMAKE_CURRENT_SOURCE_DIR}/laszip.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/laszipper.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/lasunzipper.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/mydefs.hpp" )
+\ No newline at end of file
+-- 
+2.51.0.windows.2
+

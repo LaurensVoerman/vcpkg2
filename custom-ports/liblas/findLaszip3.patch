@@ -1,0 +1,28 @@
+From e8f6eabdd26db3b039e0aee2fb761c2cd5a9acdd Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Thu, 20 Nov 2025 16:38:09 +0100
+Subject: [PATCH] findLaszip3
+
+---
+ cmake/modules/FindLASzip.cmake | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/modules/FindLASzip.cmake b/cmake/modules/FindLASzip.cmake
+index a0d4b89..f6ea576 100644
+--- a/cmake/modules/FindLASzip.cmake
++++ b/cmake/modules/FindLASzip.cmake
+@@ -44,9 +44,9 @@ FIND_PATH(LASZIP_INCLUDE_DIR
+   /usr/include
+   /usr/local/include
+   ${OSGEO4W_ROOT_DIR}/include
+-  NO_DEFAULT_PATH)
++  )
+ 
+-SET(LASZIP_NAMES ${OSGEO4W_IMPORT_LIBRARY} laszip)
++SET(LASZIP_NAMES ${OSGEO4W_IMPORT_LIBRARY} laszip laszip3)
+ 
+ FIND_LIBRARY(LASZIP_LIBRARY
+   NAMES ${LASZIP_NAMES}
+-- 
+2.51.0.windows.2
+

@@ -1,4 +1,10 @@
 file(GLOB LIST_PUGINS LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_LIST_DIR}  "./*/")
+
+#coin-config.cmake 112: 		find_dependency(Boost MODULE)
+#liblas-depends: ~70: set_target_properties(liblas PROPERTIES INTERFACE_LINK_LIBRARIES "Boost::iostreams;Boost::program_options;Boost::serialization;Boost::thread")
+
+#find_package(Boost REQUIRED COMPONENTS iostreams program_options serialization thread)
+
 FOREACH( mylibfolder ${LIST_PUGINS})
   MESSAGE(LIST_PUGINS ${CMAKE_CURRENT_LIST_DIR}/${mylibfolder})
   if(IS_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${mylibfolder})
@@ -47,6 +53,11 @@ FOREACH( mylibfolder ${LIST_PUGINS})
       ENDIF()
     elseif(${mylibfolder} STREQUAL "osgPlugin")
       MESSAGE("ignore osgPlugin folder")
+	elseif(${mylibfolder} STREQUAL "las")
+	  find_package(libLAS CONFIG REQUIRED)
+	  IF(LIBLAS_FOUND)
+         ADD_SUBDIRECTORY(las)
+      ENDIF()
     else()
       MESSAGE("ADD ${mylibfolder}")
 	  ADD_SUBDIRECTORY(${mylibfolder})
