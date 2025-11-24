@@ -1,10 +1,20 @@
+SET(TARGET_DEFAULT_PREFIX "osgdb_")
+set(DYNAMIC_OPENSCENEGRAPH 1)
+
+string(TOUPPER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_UPPER)
+cmake_path(GET OSG_LIBRARY_${CMAKE_BUILD_TYPE_UPPER} PARENT_PATH CURRENT_LIB_DIR)
+link_directories(${CURRENT_LIB_DIR})
+
+SET(TARGET_COMMON_LIBRARIES
+    OpenThreads
+    osg
+    osgDB
+    osgUtil
+)
+
+
+
 file(GLOB LIST_PUGINS LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_LIST_DIR}  "./*/")
-
-#coin-config.cmake 112: 		find_dependency(Boost MODULE)
-#liblas-depends: ~70: set_target_properties(liblas PROPERTIES INTERFACE_LINK_LIBRARIES "Boost::iostreams;Boost::program_options;Boost::serialization;Boost::thread")
-
-#find_package(Boost REQUIRED COMPONENTS iostreams program_options serialization thread)
-
 FOREACH( mylibfolder ${LIST_PUGINS})
   MESSAGE(LIST_PUGINS ${CMAKE_CURRENT_LIST_DIR}/${mylibfolder})
   if(IS_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${mylibfolder})
@@ -57,6 +67,13 @@ FOREACH( mylibfolder ${LIST_PUGINS})
 	  find_package(libLAS CONFIG REQUIRED)
 	  IF(LIBLAS_FOUND)
          ADD_SUBDIRECTORY(las)
+      ENDIF()
+	elseif(${mylibfolder} STREQUAL "fbx")
+	  find_package(FBX REQUIRED)
+	  IF(FBX_FOUND)
+         ADD_SUBDIRECTORY(${mylibfolder})
+	  ELSE()
+	    MESSAGE("SKIP FBX, FBX_FOUND=${FBX_FOUND}")
       ENDIF()
     else()
       MESSAGE("ADD ${mylibfolder}")

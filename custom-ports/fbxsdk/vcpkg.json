@@ -1,0 +1,8 @@
+{
+  "name": "fbxsdk",
+  "version": "2020.3.7",
+  "port-version": 0,
+  "description": "FBX SDK: Easily transfer content into the FBX format.",
+  "homepage": "https://aps.autodesk.com/developer/overview/fbx-sdk",
+  "supports": "windows & !x86"
+}
