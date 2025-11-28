@@ -1,0 +1,54 @@
+From 4dd5b5d080dc92e07e8b8c24d97a1058d7a27947 Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Fri, 28 Nov 2025 11:33:24 +0100
+Subject: [PATCH] dllexport
+
+---
+ CMakeLists.txt      | 3 +++
+ src/lasunzipper.hpp | 2 +-
+ src/laszipper.hpp   | 2 +-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4b0a02b..500f04d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -97,6 +97,9 @@ set_directory_properties(PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${LASZIP_OUTPUT_L
+ 
+ if(WIN32)
+   add_definitions("-DLASZIP_DLL_EXPORT=1")
++  if (NOT LASZIP_BUILD_STATIC)
++    add_definitions("-DCOMPILE_AS_DLL")
++  endif()
+   foreach(config ${CMAKE_CONFIGURATION_TYPES})
+     string(TOUPPER ${config} CONFIG)
+     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIG} "${LASZIP_OUTPUT_LIB_DIR}")
+diff --git a/src/lasunzipper.hpp b/src/lasunzipper.hpp
+index 8eefc0a..5af71dc 100644
+--- a/src/lasunzipper.hpp
++++ b/src/lasunzipper.hpp
+@@ -49,7 +49,7 @@ using namespace std;
+ class ByteStreamIn;
+ class LASreadPoint;
+ 
+-class LASunzipper
++class LASLIB_DLL LASunzipper
+ {
+ public:
+   bool open(FILE* file, const LASzip* laszip);
+diff --git a/src/laszipper.hpp b/src/laszipper.hpp
+index 082806f..4f87e9b 100644
+--- a/src/laszipper.hpp
++++ b/src/laszipper.hpp
+@@ -50,7 +50,7 @@ using namespace std;
+ class ByteStreamOut;
+ class LASwritePoint;
+ 
+-class LASzipper
++class LASLIB_DLL LASzipper
+ {
+ public:
+   bool open(FILE* outfile, const LASzip* laszip);
+-- 
+2.51.0.windows.2
+

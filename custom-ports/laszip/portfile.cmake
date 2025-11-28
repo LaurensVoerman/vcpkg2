@@ -8,6 +8,7 @@ vcpkg_from_github(
         compiler-options.diff
         format-string.diff
 		AddInstUnZipper.patch
+		dllexport.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LASZIP_BUILD_STATIC)
