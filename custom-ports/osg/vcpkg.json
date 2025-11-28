@@ -28,9 +28,21 @@
     "zlib"
   ],
   "default-features": [
-    "default-features",
+    "collada",
+	"docs",
+	"examples",
+	"fontconfig",
     "freetype",
-    "plugins"
+	"nvtt",
+	"openexr",
+	"vnc",
+	"lua",
+	"fbx",
+	"dicom",
+	"packages",
+	"plugins",
+	"sdl1",
+	"tools"
   ],
   "features": {
     "collada": {
