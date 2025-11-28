@@ -22,7 +22,7 @@
             "tools"
           ]
     },
-	"fbxsdk",
+	"fbx-sdk",
     "liblas"
   ]
 }
