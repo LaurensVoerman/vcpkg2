@@ -1,0 +1,67 @@
+From 728f4fadf4cf15a548c330f7ecee43ab2b977554 Mon Sep 17 00:00:00 2001
+From: LaurensVoerman <l.voerman@rug.nl>
+Date: Fri, 28 Nov 2025 14:13:41 +0100
+Subject: [PATCH] linkBoost
+
+---
+ src/CMakeLists.txt | 34 +++++++++++++++++++++++++++++-----
+ 1 file changed, 29 insertions(+), 5 deletions(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e35de06..8aeb132 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -212,21 +212,45 @@ set(LIBLAS_C_SOURCES
+ #endif()
+ 
+ if(WIN32)
+-    add_definitions("-DLAS_DLL_EXPORT=1")
+-if (NOT WITH_STATIC_LASZIP)
+-    add_definitions("-DLASZIP_DLL_IMPORT=1")
+-endif()
++  add_definitions("-DLAS_DLL_EXPORT=1")
++  if(WITH_LASZIP)
++    if (NOT WITH_STATIC_LASZIP)
++#     add_definitions("-DLASZIP_DLL_IMPORT=1")
++      add_definitions("-DUSE_AS_DLL=1")
++    endif()
++  endif()
+ endif()
+ 
+ add_library(${LIBLAS_LIB_NAME} SHARED ${LIBLAS_SOURCES})
+ add_library(${LIBLAS_C_LIB_NAME} SHARED ${LIBLAS_C_SOURCES})
+ 
++#generate a list of lib files to link:
++#E:\vcpkg\downloads\tools\cmake-3.30.1-windows\cmake-3.30.1-windows-i386\share\cmake-3.30\Modules\FindBoost.cmake
++#Boost_IOSTREAMS_LIBRARY_RELEASE contains dll for x64-windows (contains .lib for x64-windows-static-md)
++foreach(comp iostreams program_options serialization thread)
++  string(TOUPPER ${comp} uppercomp)
++  set(target "Boost::${comp}")
++  foreach(cfg RELEASE DEBUG)
++  get_target_property(lib ${target} IMPORTED_IMPLIB_${cfg})
++    if(lib)
++      set(Boost_${uppercomp}_LIB_${cfg} "${lib}" CACHE STRING "")
++  else()
++      get_target_property(lib ${target} IMPORTED_LOCATION_${cfg})
++      if(lib)
++        set(Boost_${uppercomp}_LIB_${cfg} "${lib}" CACHE STRING "")
++      endif()
++    endif()
++  endforeach()
++  list(APPEND boost_lib_list $<$<NOT:$<CONFIG:DEBUG>>:${Boost_${uppercomp}_LIB_RELEASE}>;$<$<CONFIG:DEBUG>:${Boost_${uppercomp}_LIB_DEBUG}>)
++endforeach()
++		
+ target_link_libraries(${LIBLAS_LIB_NAME}
+   ${TIFF_LIBRARY}
+   ${GEOTIFF_LIBRARY}
+   ${GDAL_LIBRARY}
+   ${LASZIP_LIBRARY}
+-  ${Boost_LIBRARIES})
++  ${boost_lib_list}
++  )
+ 
+ target_link_libraries(${LIBLAS_C_LIB_NAME}
+   ${LIBLAS_LIB_NAME} )
+-- 
+2.51.0.windows.2
+

@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+#vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 set(VERSION 1.8.1)
                                               
@@ -21,7 +21,7 @@ vcpkg_extract_source_archive(
         force-cpp11.patch
         fix-cmake4.patch
 		findLaszip3.patch
-		BoostLibBeforeTiff.patch
+		linkBoost.patch
 )
 file(RENAME "${SOURCE_PATH}/cmake/modules/FindLASzip.cmake" "${SOURCE_PATH}/cmake/FindLASzip.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules")
@@ -34,10 +34,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # IF(WITH_LASZIP) HAVE_LASZIP
-
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LASZIP_BUILD_STATIC)
 IF(WITH_LASZIP)
     list(APPEND OPTIONS -DWITH_LASZIP=ON)
-	list(APPEND OPTIONS -DVCPKG_LIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE})
+	list(APPEND OPTIONS -DWITH_STATIC_LASZIP=${LASZIP_BUILD_STATIC})
+#	list(APPEND OPTIONS -DVCPKG_LIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE})
 ENDIF()
 
 vcpkg_cmake_configure(
