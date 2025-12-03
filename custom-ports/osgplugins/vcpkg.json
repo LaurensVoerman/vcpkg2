@@ -23,6 +23,8 @@
           ]
     },
 	"fbx-sdk",
-    "liblas"
+	"coin",
+    "liblas",
+	"brotli"
   ]
 }
